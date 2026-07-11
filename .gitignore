@@ -1,0 +1,29 @@
+# Database — generated at runtime, not committed
+knowledge_base.db
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Streamlit logs
+streamlit.log
+streamlit_err.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Foundry Local model cache (downloaded at runtime, multi-GB)
+.local-rag-assistant/

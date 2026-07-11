@@ -1,0 +1,82 @@
+Python Basics for AI Development
+
+Setting up a Python project:
+A well-structured Python project starts with a virtual environment to isolate dependencies:
+    python -m venv .venv
+    .venv\Scripts\activate       # Windows
+    source .venv/bin/activate    # macOS / Linux
+    pip install -r requirements.txt
+
+The requirements.txt file lists all dependencies with pinned versions:
+    numpy>=1.26.0
+    openai>=1.30.0
+    foundry-local-sdk
+    streamlit>=1.35.0
+
+Entry point pattern:
+Python scripts should use the if __name__ == "__main__" guard so they can be both imported as modules and run directly:
+    def main():
+        print("Hello, RAG!")
+
+    if __name__ == "__main__":
+        main()
+
+Functions and modules:
+Break your project into small, focused functions and separate files (modules). A RAG project might have:
+    config.py       — constants and settings
+    database.py     — SQLite operations
+    embeddings.py   — embedding model calls
+    retrieval.py    — vector search logic
+    llm_client.py   — LLM chat completion
+    ingest.py       — document ingestion script
+    main.py         — CLI entry point
+    app.py          — web UI
+
+Working with files:
+    # Read a text file
+    with open("document.txt", encoding="utf-8") as f:
+        text = f.read()
+
+    # List files in a directory
+    import os
+    files = os.listdir("docs/")
+
+    # Check if a path exists
+    if os.path.exists("knowledge_base.db"):
+        print("DB found")
+
+Lists and list comprehensions:
+    numbers = [1, 2, 3, 4, 5]
+    squares = [n ** 2 for n in numbers]   # [1, 4, 9, 16, 25]
+    evens   = [n for n in numbers if n % 2 == 0]   # [2, 4]
+
+Dictionaries:
+    chunk = {"source": "faq.txt", "content": "Some text", "score": 0.92}
+    print(chunk["source"])   # faq.txt
+    chunk["score"] = 0.95    # update a value
+
+Sorting:
+    # Sort a list of dicts by a key, descending
+    chunks = [{"score": 0.8}, {"score": 0.95}, {"score": 0.7}]
+    chunks.sort(key=lambda x: x["score"], reverse=True)
+
+JSON serialisation (needed for storing embeddings):
+    import json
+    vector = [0.12, -0.34, 0.56]
+    as_string = json.dumps(vector)          # "[0.12, -0.34, 0.56]"
+    back_to_list = json.loads(as_string)    # [0.12, -0.34, 0.56]
+
+NumPy for vector maths:
+    import numpy as np
+    a = np.array([1.0, 2.0, 3.0])
+    b = np.array([4.0, 5.0, 6.0])
+    dot_product = np.dot(a, b)              # 32.0
+    norm_a = np.linalg.norm(a)             # 3.742...
+
+Error handling:
+    try:
+        result = risky_operation()
+    except FileNotFoundError as e:
+        print(f"File not found: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")

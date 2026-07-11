@@ -1,0 +1,4 @@
+foundry-local-sdk
+openai>=1.30.0
+numpy>=1.26.0
+streamlit>=1.35.0

@@ -1,0 +1,29 @@
+Artificial Intelligence Fundamentals
+
+What is a Large Language Model (LLM)?
+A large language model is a neural network trained on vast amounts of text to predict the next token (word fragment) in a sequence. By learning patterns across billions of documents, LLMs develop the ability to generate coherent, contextually relevant text, answer questions, translate languages, write code, and summarise information. Examples include GPT-4, Claude, Gemini, Phi, and Mistral.
+
+How does an LLM generate text?
+Generation is autoregressive — the model produces one token at a time, then feeds that token back as input to produce the next one. The process starts with your prompt and continues until the model outputs a stop token or reaches the maximum length limit. The temperature parameter controls randomness: lower values make output more predictable, higher values make it more creative.
+
+Tokens and context windows:
+Text is split into tokens before being processed. In English, one token is roughly 0.75 words. A phrase like "Hello, world!" is approximately 4 tokens. Every LLM has a maximum context window (e.g., 4096 or 128000 tokens) — the total amount of text (prompt + response) it can consider at once. Input that exceeds this limit is truncated.
+
+Hallucination:
+Hallucination is when an LLM confidently states something that is factually incorrect. It happens because the model is optimised to produce plausible-sounding text, not to verify facts. RAG reduces hallucination by providing the model with accurate, retrieved context and instructing it to only use that context.
+
+Inference vs training:
+Training is the computationally expensive process of adjusting millions or billions of model parameters by exposing the model to huge text datasets. This is done once by researchers using specialised hardware. Inference is running the already-trained model to produce responses — this is what happens every time you ask the chatbot a question. Foundry Local is an inference runtime: it runs pre-trained models on your device.
+
+Fine-tuning:
+Fine-tuning is the process of continuing to train a pre-trained model on a smaller, domain-specific dataset to specialise its knowledge or behaviour. Fine-tuning changes the model weights permanently. RAG is a complementary (and often preferred) alternative for knowledge injection because it is cheaper, more flexible, and does not require GPU clusters.
+
+On-device vs cloud AI:
+Cloud AI: Your prompt is sent over the internet to a server that runs the model and returns the response. Fast, powerful, but requires network access and exposes data to the provider.
+On-device AI: The model runs entirely on your local hardware. No internet needed, data stays private. Limited by your device's CPU/GPU/NPU. Microsoft Foundry Local enables on-device AI on consumer laptops.
+
+Parameters and model size:
+The size of an LLM is measured in billions of parameters (B). Phi-3.5 Mini has 3.8B parameters; GPT-4 is estimated at 1.8 trillion. Larger models generally produce higher-quality answers but require more memory and computation. For local deployment, 3–7B parameter models strike a good balance between quality and speed on consumer hardware.
+
+The Transformer architecture:
+Almost all modern LLMs are based on the Transformer architecture (introduced in the 2017 paper "Attention Is All You Need"). The key innovation is the self-attention mechanism, which allows the model to relate every token in the input to every other token, regardless of distance. This enables understanding of long-range dependencies in text — for example, connecting a pronoun back to the noun it refers to several sentences earlier.

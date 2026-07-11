@@ -1,0 +1,66 @@
+SQLite for Local Data Storage
+
+What is SQLite?
+SQLite is a serverless, self-contained, relational database engine embedded directly into your application. Unlike MySQL or PostgreSQL, SQLite requires no separate server process — the entire database lives in a single file on disk (e.g., knowledge_base.db). It is the world's most widely deployed database engine, used in browsers, mobile apps, desktop software, and embedded systems.
+
+Key advantages for local RAG applications:
+- No installation: SQLite is built into Python's standard library (import sqlite3).
+- Single-file: The entire database is one file. Easy to back up, share, or delete.
+- No network: Reads and writes happen directly on disk, with no network round-trip.
+- Reliable: SQLite is ACID-compliant — data is not corrupted even if the program crashes mid-write.
+- Fast for reads: Small to medium databases (up to hundreds of MB) are very fast to query.
+
+Basic Python usage:
+    import sqlite3
+
+    # Connect (creates the file if it doesn't exist)
+    conn = sqlite3.connect("knowledge_base.db")
+
+    # Create a table
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS documents (
+            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            source    TEXT NOT NULL,
+            content   TEXT NOT NULL,
+            embedding TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+
+    # Insert a row
+    conn.execute(
+        "INSERT INTO documents (source, content, embedding) VALUES (?, ?, ?)",
+        ("faq.txt", "This is a sample passage.", "[0.12, -0.34, ...]")
+    )
+    conn.commit()
+
+    # Query all rows
+    rows = conn.execute("SELECT id, source, content FROM documents").fetchall()
+    for row in rows:
+        print(row)
+
+    conn.close()
+
+Storing embedding vectors:
+SQLite does not have a native VECTOR type. The simplest approach is to serialise the embedding list as a JSON string and store it in a TEXT column:
+
+    import json
+    embedding_json = json.dumps([0.12, -0.34, 0.56])   # str
+    # Store
+    conn.execute("INSERT INTO documents (..., embedding) VALUES (?, ?, ?, ?)",
+                 (source, chunk_index, content, embedding_json))
+    # Retrieve
+    row = conn.execute("SELECT embedding FROM documents WHERE id=1").fetchone()
+    embedding = json.loads(row[0])   # back to list[float]
+
+Context manager (recommended):
+Using SQLite as a context manager automatically commits on success and rolls back on error:
+    with sqlite3.connect("knowledge_base.db") as conn:
+        conn.execute("INSERT INTO documents VALUES (?, ?, ?, ?)", (...))
+        # conn.commit() called automatically on exit
+
+Common SQL operations:
+    SELECT COUNT(*) FROM documents;                          -- count rows
+    SELECT DISTINCT source FROM documents ORDER BY source;   -- list files
+    DELETE FROM documents;                                   -- clear table
+    DROP TABLE documents;                                    -- delete table

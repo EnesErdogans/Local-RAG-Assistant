@@ -1,0 +1,21 @@
+What is Retrieval-Augmented Generation (RAG)?
+
+Retrieval-Augmented Generation (RAG) is an AI design pattern that improves the quality of language model responses by grounding them in external, up-to-date documents rather than relying solely on what the model memorised during training. Instead of asking a model to answer a question from memory, RAG first retrieves relevant passages from a knowledge base and then asks the model to generate an answer using those passages as context.
+
+The three steps of RAG are:
+1. Retrieve – When a user asks a question, the question is converted into an embedding vector. This vector is compared against pre-computed embedding vectors of all stored document chunks. The most similar (most relevant) chunks are selected.
+2. Augment – The selected chunks are inserted into the model's prompt as additional context, alongside the user's original question.
+3. Generate – The language model reads the question plus the retrieved context and produces a grounded, factual answer.
+
+Why is RAG useful?
+- Reduces hallucination: The model is constrained to the provided context, so it is less likely to invent facts.
+- Enables source citation: Because you know exactly which document chunks were retrieved, you can tell the user where the answer came from.
+- No retraining required: You can add new documents to the knowledge base without fine-tuning the model.
+- Works offline: With a local embedding model and a local LLM (such as those provided by Microsoft Foundry Local), the entire pipeline can run without an internet connection.
+
+RAG is widely used in enterprise Q&A systems, customer support bots, and internal knowledge assistants. It is especially powerful when the knowledge domain changes frequently, because only the document store needs to be updated.
+
+Comparison with simple context injection:
+Simple context injection means pasting an entire document into the prompt. This works for very small documents but quickly hits the model's context-length limit. RAG solves this by retrieving only the most relevant fragments, keeping prompts short and focused.
+
+Chunking strategy matters enormously in RAG. If chunks are too large, they include irrelevant sentences that dilute the signal. If they are too small, they may not contain enough context for the model to understand the passage. A common heuristic is 300–600 characters per chunk with a small overlap (50–100 characters) between adjacent chunks, so that a sentence split across a boundary is still captured.

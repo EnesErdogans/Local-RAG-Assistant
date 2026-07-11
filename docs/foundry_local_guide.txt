@@ -1,0 +1,50 @@
+Microsoft Foundry Local — Developer Guide
+
+What is Foundry Local?
+Microsoft Foundry Local is an end-to-end local AI platform that lets developers run large language models (LLMs) and embedding models completely on their own device, with no cloud account or internet connection required. It provides a lightweight runtime, a curated catalogue of optimised models, and an OpenAI-compatible SDK so that existing code can be adapted with minimal changes.
+
+Key features:
+- On-device inference: All computation happens on the user's machine using CPU, GPU, or NPU acceleration. No data leaves the device.
+- Automatic hardware acceleration: Foundry Local detects available hardware (CPU, DirectML GPU, Apple Silicon NPU) and selects the fastest runtime automatically.
+- Model catalogue: A library of pre-optimised models is available, including Phi-3.5 Mini (3.8B parameters), Phi-4 Mini, Qwen3 series, and Mistral variants.
+- OpenAI-compatible API: The SDK exposes a local HTTP endpoint that behaves like the OpenAI API, making it easy to swap in Foundry Local wherever you currently use a cloud LLM.
+- Python, JavaScript, C# SDKs: Official SDKs are provided for multiple languages.
+
+Installation (Python):
+    pip install foundry-local-sdk
+
+Basic usage:
+    from foundry_local import FoundryLocalManager
+    from openai import OpenAI
+
+    manager = FoundryLocalManager("phi-3.5-mini")
+    client = OpenAI(base_url=manager.endpoint, api_key=manager.api_key)
+
+    response = client.chat.completions.create(
+        model=manager.get_model_id("phi-3.5-mini"),
+        messages=[{"role": "user", "content": "Hello!"}],
+    )
+    print(response.choices[0].message.content)
+
+Embedding models:
+Foundry Local also supports embedding models such as qwen3-embedding-0.6b. These are used to convert text into numerical vectors for semantic search. Usage is identical to the chat-completion client but calls the embeddings endpoint:
+
+    manager = FoundryLocalManager("qwen3-embedding-0.6b")
+    client = OpenAI(base_url=manager.endpoint, api_key=manager.api_key)
+    response = client.embeddings.create(
+        model=manager.get_model_id("qwen3-embedding-0.6b"),
+        input="Your text here",
+    )
+    vector = response.data[0].embedding
+
+Model selection tips:
+- Phi-3.5 Mini (3.8B) — good balance of speed and quality for Q&A tasks. Recommended for most laptops.
+- Phi-4 Mini — higher quality answers but requires more RAM and is slower.
+- Mistral 7B — strong reasoning, needs at least 8 GB of VRAM or 16 GB RAM.
+- For the embedding model, qwen3-embedding-0.6b is fast and produces high-quality 1536-dimensional vectors.
+
+System requirements:
+- Windows 10/11 or macOS 12+
+- At least 8 GB RAM (16 GB recommended)
+- 10–20 GB free disk space per model
+- No GPU required (CPU-only mode supported)
