@@ -1,0 +1,44 @@
+<svg viewBox="0 0 780 180" xmlns="http://www.w3.org/2000/svg"
+     style="background:#ffffff" font-family="Segoe UI, Arial, sans-serif">
+
+  <!-- ══ STEP 1 — RETRIEVE ══ -->
+  <rect x="20" y="30" width="200" height="120" rx="14"
+        fill="#e8f1fb" stroke="#0078d4" stroke-width="2.2"/>
+  <text x="120" y="65" text-anchor="middle" font-size="24">🔍</text>
+  <text x="120" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#0078d4">1 · Retrieve</text>
+  <text x="120" y="110" text-anchor="middle" font-size="10" fill="#444">Embed the user query,</text>
+  <text x="120" y="126" text-anchor="middle" font-size="10" fill="#444">compute cosine similarity,</text>
+  <text x="120" y="142" text-anchor="middle" font-size="10" fill="#444">return top-3 chunks.</text>
+
+  <!-- ── arrow 1 → 2 ── -->
+  <line x1="222" y1="90" x2="270" y2="90"
+        stroke="#555" stroke-width="2.2" marker-end="url(#arr)"/>
+
+  <!-- ══ STEP 2 — AUGMENT ══ -->
+  <rect x="272" y="30" width="200" height="120" rx="14"
+        fill="#f0faf0" stroke="#107c10" stroke-width="2.2"/>
+  <text x="372" y="65" text-anchor="middle" font-size="24">📝</text>
+  <text x="372" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#107c10">2 · Augment</text>
+  <text x="372" y="110" text-anchor="middle" font-size="10" fill="#444">Inject retrieved chunks</text>
+  <text x="372" y="126" text-anchor="middle" font-size="10" fill="#444">into the prompt as context</text>
+  <text x="372" y="142" text-anchor="middle" font-size="10" fill="#444">alongside the question.</text>
+
+  <!-- ── arrow 2 → 3 ── -->
+  <line x1="474" y1="90" x2="522" y2="90"
+        stroke="#555" stroke-width="2.2" marker-end="url(#arr)"/>
+
+  <!-- ══ STEP 3 — GENERATE ══ -->
+  <rect x="524" y="30" width="230" height="120" rx="14"
+        fill="#f5f0fc" stroke="#8764b8" stroke-width="2.2"/>
+  <text x="639" y="65" text-anchor="middle" font-size="24">💡</text>
+  <text x="639" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#8764b8">3 · Generate</text>
+  <text x="639" y="110" text-anchor="middle" font-size="10" fill="#444">Foundry Local runs phi-3.5-mini</text>
+  <text x="639" y="126" text-anchor="middle" font-size="10" fill="#444">on-device, produces a grounded</text>
+  <text x="639" y="142" text-anchor="middle" font-size="10" fill="#444">answer with source citation.</text>
+
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L10,4 z" fill="#555"/>
+    </marker>
+  </defs>
+</svg>
