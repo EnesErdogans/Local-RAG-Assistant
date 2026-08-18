@@ -16,7 +16,7 @@ CHUNK_OVERLAP = 80      # overlap between consecutive chunks
 TOP_K_CHUNKS = 3        # number of top chunks to retrieve per query
 
 # LLM generation
-MAX_TOKENS = 512
+MAX_TOKENS = 256
 TEMPERATURE = 0.1       # low temperature for factual Q&A
 
 SYSTEM_PROMPT = (

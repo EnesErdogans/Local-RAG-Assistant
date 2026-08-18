@@ -5,7 +5,8 @@ Run with:  streamlit run app.py
 
 import streamlit as st
 from database import init_db, count_chunks, list_sources
-from llm_client import answer_query
+from embeddings import warm_up_embedding_model
+from llm_client import answer_query, warm_up_chat_model
 
 # ── Page config ───────────────────────────────────────────────────────────────
 
@@ -16,6 +17,13 @@ st.set_page_config(
 )
 
 init_db()
+
+
+@st.cache_resource(show_spinner=False)
+def warm_up_models() -> bool:
+    warm_up_embedding_model()
+    warm_up_chat_model()
+    return True
 
 # ── Global CSS ────────────────────────────────────────────────────────────────
 
@@ -94,6 +102,13 @@ for msg in st.session_state.messages:
 if total == 0:
     st.info("The knowledge base is empty. Add `.txt` or `.md` files to `docs/` and run `python ingest.py`.")
     st.stop()
+
+with st.spinner("Preparing local models..."):
+    try:
+        warm_up_models()
+    except Exception as exc:
+        st.error(f"Local models could not be prepared: {exc}")
+        st.stop()
 
 question = st.chat_input("Ask a question about your documents...")
 

@@ -29,6 +29,11 @@ def get_embedding(text: str) -> list[float]:
     return response.data[0].embedding
 
 
+def warm_up_embedding_model() -> None:
+    """Load the embedding model before the first user query."""
+    get_embedding("warmup")
+
+
 def cosine_similarity(a: list[float], b: list[float]) -> float:
     va = np.array(a, dtype=np.float32)
     vb = np.array(b, dtype=np.float32)

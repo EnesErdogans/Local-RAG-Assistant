@@ -7,7 +7,8 @@ Run with:
 
 import sys
 from database import init_db, count_chunks, list_sources
-from llm_client import answer_query
+from embeddings import warm_up_embedding_model
+from llm_client import answer_query, warm_up_chat_model
 
 BANNER = """
 ================================================================
@@ -28,6 +29,12 @@ def print_help() -> None:
         "  <anything>   — ask a question\n"
     )
 
+def warm_up_models() -> None:
+    print("  Preparing local models ...")
+    warm_up_embedding_model()
+    warm_up_chat_model()
+    print("  Local models ready.\n")
+
 
 def run() -> None:
     init_db()
@@ -42,6 +49,7 @@ def run() -> None:
     else:
         sources = list_sources()
         print(f"  Knowledge base ready: {total} chunks from {len(sources)} document(s).\n")
+        warm_up_models()
 
     while True:
         try:

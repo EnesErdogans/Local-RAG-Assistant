@@ -3,12 +3,18 @@ LLM chat integration via Foundry Local SDK.
 """
 
 from foundry_local_sdk.openai.chat_client import ChatClient
+from foundry_local_sdk.exception import FoundryLocalException
 
 from config import CHAT_MODEL, MAX_TOKENS, TEMPERATURE, SYSTEM_PROMPT
 from foundry_manager import get_or_load_model
 from retrieval import get_top_chunks, format_context
 
 _chat_client: ChatClient | None = None
+MODEL_CANCELLED_ANSWER = (
+    "The local model cancelled the request before finishing. "
+    "Please wait a moment and try again. If this happens on the first question, "
+    "the model may still be loading."
+)
 
 
 def _get_client() -> ChatClient:
@@ -21,6 +27,11 @@ def _get_client() -> ChatClient:
         _chat_client.settings.max_tokens = MAX_TOKENS
         print("[LLM] Ready.")
     return _chat_client
+
+
+def warm_up_chat_model() -> None:
+    """Load the chat model before the first user query."""
+    _get_client()
 
 
 def answer_query(question: str) -> dict:
@@ -47,10 +58,19 @@ def answer_query(question: str) -> dict:
     )
 
     client = _get_client()
-    response = client.complete_chat([
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user",   "content": user_message},
-    ])
+    try:
+        response = client.complete_chat([
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user",   "content": user_message},
+        ])
+    except FoundryLocalException as exc:
+        if "cancelled" in str(exc).lower():
+            return {
+                "answer": MODEL_CANCELLED_ANSWER,
+                "sources": [],
+                "chunks": chunks,
+            }
+        raise
 
     answer = response.choices[0].message.content.strip()
     sources = list(dict.fromkeys(c["source"] for c in chunks))
